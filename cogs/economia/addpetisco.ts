@@ -2,7 +2,7 @@ import {
   ChatInputCommandInteraction,
   EmbedBuilder,
 } from "discord.js";
-import { addSaldo } from "./saldo.ts";
+import { addSaldo } from "./saldo";
 
 export async function executeAddPetisco(interaction: ChatInputCommandInteraction) {
   if (!interaction.memberPermissions?.has("Administrator")) {

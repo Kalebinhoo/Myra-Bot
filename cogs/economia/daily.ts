@@ -5,7 +5,7 @@ import {
   ButtonStyle,
   EmbedBuilder,
 } from "discord.js";
-import { addSaldo, getSaldo } from "./saldo.ts";
+import { addSaldo, getSaldo } from "./saldo";
 import { MongoClient } from "mongodb";
 
 let mongoClient: MongoClient;

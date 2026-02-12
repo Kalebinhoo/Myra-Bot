@@ -1,16 +1,16 @@
 import { Client, Events, GatewayIntentBits, REST, Routes, SlashCommandBuilder, ActivityType, type ChatInputCommandInteraction } from "discord.js";
 import dotenv from "dotenv";
 import { MongoClient, type Db } from "mongodb";
-import { getSaldo, getSaldoMessage, addSaldo } from "./economia/saldo.ts";
-import { executeAddPetisco } from "./economia/addpetisco.ts";
-import { executeShip } from "./diversão/ship.ts";
-import { executeCoposSortidos, handleCopoChoice } from "./diversão/copossortidos.ts";
-import { executePedraPapelTesoura, handlePedraPapelTesoura } from "./diversão/pppt.ts";
-import { executeDaily, handleDailyButton } from "./economia/daily.ts";
-import { handleGuildCreate, handleGuildDelete } from "./logs-entrada.ts";
-import { executeInfo } from "./utilidades/info.ts";
-import { executeAvatar } from "./utilidades/avatar.ts";
-import { executeClear } from "./moderação/clear.ts";
+import { getSaldo, getSaldoMessage, addSaldo } from "./cogs/economia/saldo";
+import { executeAddPetisco } from "./cogs/economia/addpetisco";
+import { executeShip } from "./cogs/diversão/ship";
+import { executeCoposSortidos, handleCopoChoice } from "./cogs/diversão/copossortidos";
+import { executePedraPapelTesoura, handlePedraPapelTesoura } from "./cogs/diversão/pppt";
+import { executeDaily, handleDailyButton } from "./cogs/economia/daily";
+import { handleGuildCreate, handleGuildDelete } from "./logs-entrada";
+import { executeInfo } from "./cogs/utilidades/info";
+import { executeAvatar } from "./cogs/utilidades/avatar";
+import { executeClear } from "./cogs/moderação/clear";
 
 console.log("Iniciando bot TypeScript...");
 

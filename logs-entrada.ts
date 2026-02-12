@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const LOG_CHANNEL_ID = "1424573225857450045";
+const LOG_CHANNEL_ID = "ID_CANAL";
 
 export async function handleGuildCreate(client: Client) {
   client.on("guildCreate", async (guild) => {

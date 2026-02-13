@@ -39,10 +39,3 @@ Server Discord 👩🏽: https://discord.gg/pA9nmsPGAa
     src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" 
 />
 ---
-
-## 📦 Instalação
-
-```bash
-git clone https://github.com/Kalebinhoo/myra-bot.git
-cd myra-bot
-npm install

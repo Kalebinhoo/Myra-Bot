@@ -7,7 +7,7 @@ import { executeShip } from "./cogs/diversão/ship";
 import { executeCoposSortidos, handleCopoChoice } from "./cogs/diversão/copossortidos";
 import { executePedraPapelTesoura, handlePedraPapelTesoura } from "./cogs/diversão/pppt";
 import { executeDaily, handleDailyButton } from "./cogs/economia/daily";
-import { handleGuildCreate, handleGuildDelete } from "./logs-entrada";
+import { handleGuildCreate, handleGuildDelete } from "./evento/logs-entrada";
 import { executeInfo } from "./cogs/utilidades/info";
 import { executeAvatar } from "./cogs/utilidades/avatar";
 import { executeClear } from "./cogs/moderação/clear";
@@ -16,7 +16,7 @@ console.log("Iniciando bot TypeScript...");
 
 dotenv.config();
 
-const { DISCORD_TOKEN, DISCORD_CLIENT_ID, DISCORD_GUILD_ID, MONGODB_URI } = process.env;
+const { DISCORD_TOKEN, DISCORD_CLIENT_ID, MONGODB_URI } = process.env;
 
 let mongoClient: MongoClient;
 let db: Db;
@@ -113,11 +113,6 @@ function updateBotStatus() {
 }
 
 async function registerCommands() {
-  if (DISCORD_GUILD_ID) {
-    await rest.put(Routes.applicationGuildCommands(clientId, DISCORD_GUILD_ID), { body: commands });
-    return;
-  }
-
   await rest.put(Routes.applicationCommands(clientId), { body: commands });
 }
 

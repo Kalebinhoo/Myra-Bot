@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "start": "tsx index.ts",
+    "clear-commands": "tsx clear-commands.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "dotenv": "^17.2.4",
+    "mongodb": "^7.1.0",
+    "openai": "^6.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

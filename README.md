@@ -9,8 +9,8 @@ Os comando do bot de **Myra**, está sendo desenvolvido ainda mas por enquantos 
 
 ## Suporte técnico 💚
 
-Website 🌐: https://myrasite.vercel.app/
-Server Discord 👩🏽: https://discord.gg/pA9nmsPGAa
+- **Website** 🌐: https://myrasite.vercel.app/
+- **Server Discord** 👩🏽: https://discord.gg/pA9nmsPGAa
 
 ## 🛠️ Ferramentas Utilizadas
 
@@ -38,4 +38,29 @@ Server Discord 👩🏽: https://discord.gg/pA9nmsPGAa
     style="padding-right: 10px;" 
     src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" 
 />
+<img 
+    align="center" 
+    alt="Discord" 
+    title="Discord"
+    width="50px" 
+    style="padding-right: 10px;" 
+    src="https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg" 
+/>
+<img 
+    align="center" 
+    alt="Groq" 
+    title="Groq"
+    width="50px" 
+    style="padding-right: 10px;" 
+    src="https://www.ciscoinvestments.com/assets/logos/groq-logo.png" 
+/>
+<img 
+    align="center" 
+    alt="MongoDB" 
+    title="MongoDB"
+    width="50px" 
+    style="padding-right: 10px;" 
+    src="https://images.icon-icons.com/2415/PNG/512/mongodb_original_logo_icon_146424.png" 
+/>
+
 ---

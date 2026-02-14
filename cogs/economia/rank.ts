@@ -1,7 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, User, Guild } from "discord.js";
 import { createCanvas, loadImage, Canvas, CanvasRenderingContext2D, Image } from "canvas";
 import { getAllNonDefaultSaldos } from "./saldo";
-import { getGroqImageService, type RankUser } from "../../services/groq-image";
 
 interface UserData {
   position: number;

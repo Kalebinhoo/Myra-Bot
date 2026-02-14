@@ -88,13 +88,11 @@ export async function handlePedraPapelTesoura(interaction: any) {
     .setTimestamp();
 
   const buttons = CHOICES.map((choice) => {
-    let style = ButtonStyle.Secondary; // Padrão: cinza
+    let style = ButtonStyle.Secondary;
     
     if (choice.id === choiceId) {
-      // Botão que o usuário escolheu
       style = result === "win" ? ButtonStyle.Success : result === "lose" ? ButtonStyle.Danger : ButtonStyle.Secondary;
     } else if (choice.id === botChoice) {
-      // Botão que o bot escolheu
       style = result === "lose" ? ButtonStyle.Success : result === "win" ? ButtonStyle.Danger : ButtonStyle.Secondary;
     }
     

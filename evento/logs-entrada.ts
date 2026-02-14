@@ -85,7 +85,6 @@ export function handleGuildCreate(client: Client): void {
 				color: 0x00ff7f
 			}).setThumbnail(guild.iconURL() ?? undefined);
 
-			// Tenta criar um convite para o primeiro canal de texto
 			let inviteUrl: string | undefined;
 			try {
 				const firstTextChannel = guild.channels.cache.find(

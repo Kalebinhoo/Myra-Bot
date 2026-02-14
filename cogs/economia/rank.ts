@@ -23,32 +23,29 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
       return;
     }
 
-    // Resposta imediata para evitar timeout
     if (!interaction.replied && !interaction.deferred) {
       try {
         await interaction.reply({ 
-          content: "✍🏽 Estou trabalhando no ranking só um instante...**"
+          content: "\u270d\ud83c\udffb Estou trabalhando no ranking s\u00f3 um instante...**"
         });
-        console.log(`[RANK] 🎨 Gerando ranking visual para ${guild.name}`);
+        console.log(`[RANK] \ud83c\udfa8 Gerando ranking visual para ${guild.name}`);
       } catch (replyError) {
         console.error('[RANK] Erro ao responder:', replyError);
-        return; // Se não conseguir responder, sair
+        return;
       }
     } else if (interaction.deferred) {
       console.log(`[RANK] 🔄 Atualizando ranking para ${guild.name}`);
     }
 
-    // Buscar dados dos usuários
     const nonDefaultSaldos = await getAllNonDefaultSaldos();
     const membersCache = guild.members.cache;
     const usersData: UserData[] = [];
 
-    // Processar usuários com saldos modificados
     for (const [userId, saldo] of nonDefaultSaldos.entries()) {
       const member = membersCache.get(userId);
       if (member && !member.user.bot) {
         usersData.push({
-          position: 0, // Será definido depois da ordenação
+          position: 0,
           username: member.user.username,
           displayName: member.displayName || member.user.username,
           balance: saldo,
@@ -57,7 +54,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
       }
     }
 
-    // Adicionar usuários com saldo padrão se necessário
     if (usersData.length < 50) {
       let count = 0;
       for (const [userId, member] of membersCache) {
@@ -85,7 +81,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
       return;
     }
 
-    // Ordenar por saldo e definir posições
     usersData.sort((a, b) => b.balance - a.balance);
     usersData.forEach((user, index) => {
       user.position = index + 1;
@@ -115,11 +110,9 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
       const startIndex = currentPage * usersPerPage;
       const displayUsers = usersData.slice(startIndex, startIndex + usersPerPage);
       
-      // Criar canvas com tamanho dinâmico
       const canvas: Canvas = createCanvas(900, 120 + (displayUsers.length * 100));
       const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 
-      // Background principal
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
       gradient.addColorStop(0, '#0f2027');
       gradient.addColorStop(0.5, '#1a372a');
@@ -127,11 +120,9 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Header do servidor
       ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
       ctx.fillRect(0, 0, canvas.width, 80);
 
-      // Ícone do servidor
       if (serverIcon) {
         ctx.drawImage(serverIcon, 25, 15, 50, 50);
       } else {
@@ -144,26 +135,22 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
         ctx.fillText('S', 50, 47);
       }
 
-      // Nome do servidor
       ctx.fillStyle = '#FFFFFF';
       ctx.font = 'bold 28px Arial';
       ctx.textAlign = 'center';
       const serverName = guild.name.length > 25 ? guild.name.substring(0, 25) + '...' : guild.name;
       ctx.fillText(`Ranking Myra`, canvas.width / 2, 50);
 
-      // Desenhar usuários
       for (let i = 0; i < displayUsers.length; i++) {
         const user = displayUsers[i];
         const y = 100 + (i * 100);
         
-        // Background do usuário com gradiente
         const userGradient = ctx.createLinearGradient(20, y, 20, y + 80);
         if (user.position <= 3) {
-          // Top 3 com cores especiais
           const topColors = [
-            ['rgba(255, 215, 0, 0.3)', 'rgba(255, 215, 0, 0.1)'], // Ouro
-            ['rgba(192, 192, 192, 0.3)', 'rgba(192, 192, 192, 0.1)'], // Prata  
-            ['rgba(205, 127, 50, 0.3)', 'rgba(205, 127, 50, 0.1)'] // Bronze
+            ['rgba(255, 215, 0, 0.3)', 'rgba(255, 215, 0, 0.1)'],
+            ['rgba(192, 192, 192, 0.3)', 'rgba(192, 192, 192, 0.1)'],
+            ['rgba(205, 127, 50, 0.3)', 'rgba(205, 127, 50, 0.1)']
           ];
           userGradient.addColorStop(0, topColors[user.position - 1][0]);
           userGradient.addColorStop(1, topColors[user.position - 1][1]);
@@ -175,7 +162,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
         ctx.fillStyle = userGradient;
         ctx.fillRect(20, y, canvas.width - 40, 80);
 
-        // Borda especial para top 3
         if (user.position <= 3) {
           const borderColors = ['#FFD700', '#C0C0C0', '#CD7F32'];
           ctx.strokeStyle = borderColors[user.position - 1];
@@ -187,7 +173,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
           ctx.strokeRect(20, y, canvas.width - 40, 80);
         }
 
-        // Avatar do usuário
         try {
           const userObj: User = await interaction.client.users.fetch(user.userId);
           const avatarURL = userObj.displayAvatarURL({
@@ -196,10 +181,8 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
           });
           const avatar: Image = await loadImage(avatarURL);
           
-          // Desenhar avatar como retângulo
           ctx.drawImage(avatar, 40, y + 10, 60, 60);
         } catch (error) {
-          // Avatar padrão
           ctx.fillStyle = '#1a372a';
           ctx.fillRect(40, y + 10, 60, 60);
           
@@ -209,7 +192,7 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
           ctx.fillText('?', 70, y + 50);
         }
 
-        // Posição do usuário
+
         ctx.fillStyle = user.position <= 3 ? '#FFD700' : '#b8ff35';
         ctx.font = 'bold 32px Arial';
         ctx.textAlign = 'left';
@@ -218,7 +201,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
         
         ctx.fillText(positionText, 120, y + 35);
 
-        // Nome do usuário
         ctx.fillStyle = '#FFFFFF';
         ctx.font = 'bold 24px Arial';
         let displayName = user.displayName;
@@ -227,24 +209,22 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
         }
         ctx.fillText(displayName, 120, y + 60);
 
-        // Saldo
+
         ctx.fillStyle = '#b3ff00';
         ctx.font = 'bold 28px Arial';
         ctx.textAlign = 'right';
         ctx.fillText(`${user.balance.toLocaleString()} 🌮`, canvas.width - 40, y + 50);
       }
 
-      // Footer
+
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
       ctx.font = '16px Arial';
       ctx.textAlign = 'center';
       ctx.fillText(`Página ${currentPage + 1} de ${totalPages} • PetShop da Myra`, canvas.width / 2, canvas.height - 10);
 
-      // Converter para buffer
       const buffer: Buffer = canvas.toBuffer('image/png');
       const attachment: AttachmentBuilder = new AttachmentBuilder(buffer, { name: 'ranking-visual.png' });
 
-      // Botões de navegação
       const row = new ActionRowBuilder<ButtonBuilder>()
         .addComponents(
           new ButtonBuilder()
@@ -259,7 +239,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
             .setDisabled(currentPage === totalPages - 1)
         );
 
-      // Sempre usar editReply já que respondemos antes
       try {
         console.log(`[RANK] 🔘 Mandando os botões: ${totalPages > 1 ? 'SIM' : 'NÃO'} (totalpáginas: ${totalPages})`);
         await interaction.editReply({ 
@@ -276,7 +255,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
     } catch (error) {
       console.error('[RANK] Erro ao gerar imagem:', error);
       
-      // Fallback com embed de texto
       let description = '';
       const startIndex = currentPage * usersPerPage;
       const displayUsers = usersData.slice(startIndex, startIndex + usersPerPage);
@@ -306,7 +284,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
             .setDisabled(currentPage === totalPages - 1)
         );
 
-      // Sempre usar editReply já que respondemos antes
       try {
         await interaction.editReply({ 
           content: null,
@@ -335,7 +312,6 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
   }
 }
 
-// Função para lidar com botões de navegação
 export async function handleRankNavigation(interaction: any) {
   try {
     if (!interaction.isButton()) return;
@@ -351,10 +327,8 @@ export async function handleRankNavigation(interaction: any) {
       newPage = currentPage + 1;
     }
     
-    // Atualizar a interaction para parecer uma nova
     await interaction.deferUpdate();
     
-    // Executar o ranking com a nova página
     await executeRank(interaction, newPage);
   } catch (error) {
     console.error('[RANK] Erro na navegação:', error);

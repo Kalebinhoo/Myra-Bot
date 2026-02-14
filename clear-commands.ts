@@ -1,7 +1,6 @@
 import { REST, Routes } from "discord.js";
 import dotenv from "dotenv";
 
-// Carregar variáveis de ambiente
 dotenv.config();
 
 const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = process.env;
@@ -17,7 +16,6 @@ async function clearDuplicateCommands() {
   try {
     console.log("🔍 Buscando comandos registrados...");
 
-    // Buscar todos os comandos globais
     const globalCommands = await rest.get(Routes.applicationCommands(clientId)) as any[];
     
     console.log(`📋 Encontrados ${globalCommands.length} comandos globais`);
@@ -27,13 +25,11 @@ async function clearDuplicateCommands() {
       return;
     }
 
-    // Mostrar comandos atuais
-    console.log("\n📝 Comandos atuais:");
+    console.log("\n📋 Comandos atuais:");
     globalCommands.forEach((cmd, index) => {
       console.log(`${index + 1}. ${cmd.name} - ${cmd.description}`);
     });
 
-    // Identificar duplicatas
     const commandNames = new Map<string, number>();
     const duplicates: string[] = [];
     
@@ -52,7 +48,7 @@ async function clearDuplicateCommands() {
       console.log("\n✅ Nenhum comando duplicado encontrado!");
     }
 
-    // Perguntar se deve limpar TODOS os comandos
+
     console.log("\n🗑️  OPÇÕES:");
     console.log("1. Limpar TODOS os comandos (recomendado)");
     console.log("2. Manter comandos existentes");
@@ -82,7 +78,6 @@ async function clearAllCommands() {
   try {
     console.log("\n🗑️  Limpando TODOS os comandos...");
     
-    // Limpar comandos globais
     await rest.put(Routes.applicationCommands(clientId), { body: [] });
     
     console.log("✅ Todos os comandos foram removidos!");
@@ -108,7 +103,6 @@ function askForChoice(): Promise<string> {
   });
 }
 
-// Função para mostrar estatísticas dos comandos
 async function showCommandStats() {
   try {
     const globalCommands = await rest.get(Routes.applicationCommands(clientId)) as any[];
@@ -116,7 +110,6 @@ async function showCommandStats() {
     console.log("\n📊 ESTATÍSTICAS DOS COMANDOS:");
     console.log(`Total: ${globalCommands.length} comandos`);
     
-    // Contar por categoria (baseado na descrição ou nome)
     const categories = {
       economia: 0,
       diversao: 0,
@@ -153,7 +146,6 @@ async function showCommandStats() {
   }
 }
 
-// Função principal
 async function main() {
   console.log("🤖 MYRA BOT - LIMPADOR DE COMANDOS");
   console.log("=====================================");
@@ -165,7 +157,6 @@ async function main() {
   process.exit(0);
 }
 
-// Executar se chamado diretamente
 if (require.main === module) {
   main().catch(console.error);
 }

@@ -20,7 +20,6 @@ class GroqImageService {
   private config: GroqConfig;
 
   constructor() {
-    // Usar configuração do environment
     this.config = {
       apiKey: process.env.GROQ_API_KEY || "",
       model: "llama-3.1-70b-versatile",
@@ -104,14 +103,11 @@ IMPORTANTE:
    */
   async svgToBuffer(svgCode: string, width: number = 800): Promise<Buffer> {
     try {
-      // Usar uma biblioteca para converter SVG to PNG
-      // Como fallback, vamos criar um canvas simples
       const height = Math.max(400, 100 + svgCode.split('</rect>').length * 60);
       
       const canvas = createCanvas(width, height);
       const ctx = canvas.getContext('2d');
 
-      // Background
       const gradient = ctx.createLinearGradient(0, 0, 0, height);
       gradient.addColorStop(0, '#1e3c72');
       gradient.addColorStop(1, '#2a5298');
@@ -119,14 +115,11 @@ IMPORTANTE:
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
-      // Título
       ctx.fillStyle = '#FFD700';
       ctx.font = 'bold 32px Arial';
       ctx.textAlign = 'center';
       ctx.fillText('🏆 RANKING DE PETISCOS', width / 2, 50);
 
-      // Nota: Esta é uma implementação de fallback
-      // Em produção, usaria uma biblioteca como 'svg2img' ou 'puppeteer'
       ctx.fillStyle = '#FFFFFF';
       ctx.font = '16px Arial';
       ctx.textAlign = 'center';
@@ -147,7 +140,6 @@ IMPORTANTE:
     try {
       console.log(`[GROQ IMAGE] Iniciando geração de imagem para ${users.length} usuários`);
       
-      // Fallback: criar imagem usando canvas com dados da IA
       const rankingData = await this.getRankingDesignFromAI(users, serverName, requesterId);
       
       const width = 750;
@@ -156,14 +148,12 @@ IMPORTANTE:
       const canvas = createCanvas(width, height);
       const ctx = canvas.getContext('2d');
 
-      // Aplicar design sugerido pela IA
       this.applyAIDesign(ctx, rankingData, width, height, users, requesterId);
 
       return canvas.toBuffer('image/png');
 
     } catch (error) {
       console.error("[GROQ IMAGE] Erro na geração:", error);
-      // Fallback simples
       return this.createFallbackImage(users, serverName);
     }
   }
@@ -209,7 +199,6 @@ Responda em JSON com:
   }
 
   private applyAIDesign(ctx: any, design: any, width: number, height: number, users: RankUser[], requesterId: string) {
-    // Background gradiente sugerido pela IA
     const gradient = ctx.createLinearGradient(0, 0, 0, height);
     gradient.addColorStop(0, design.backgroundColors[0] || '#1a1a2e');
     gradient.addColorStop(1, design.backgroundColors[1] || '#16213e');
@@ -217,22 +206,18 @@ Responda em JSON com:
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
-    // Título
     ctx.fillStyle = design.titleColor || '#FFD700';
     ctx.font = 'bold 28px Arial';
     ctx.textAlign = 'center';
     ctx.fillText('🏆 RANKING DE PETISCOS', width / 2, 50);
 
-    // Usuários
     users.forEach((user, i) => {
       const yPos = 100 + (i * 70);
       
-      // Destacar solicitante
       const isRequester = user.id === requesterId;
       ctx.fillStyle = isRequester ? design.highlightColor || '#FFD700' : 'rgba(255, 255, 255, 0.1)';
       ctx.fillRect(20, yPos, width - 40, 60);
 
-      // Posição
       ctx.fillStyle = design.textColor || '#FFFFFF';
       ctx.font = 'bold 24px Arial';
       ctx.textAlign = 'center';
@@ -240,20 +225,17 @@ Responda em JSON com:
       const medal = ['🥇', '🥈', '🥉'][i] || `#${i + 1}`;
       ctx.fillText(medal, 70, yPos + 40);
 
-      // Nome
       ctx.fillStyle = isRequester ? design.titleColor || '#FFD700' : design.textColor || '#FFFFFF';
       ctx.font = 'bold 18px Arial';
       ctx.textAlign = 'left';
       ctx.fillText(user.username, 120, yPos + 35);
 
-      // Saldo
       ctx.fillStyle = design.highlightColor || '#00D9FF';
       ctx.font = 'bold 20px Arial';
       ctx.textAlign = 'right';
       ctx.fillText(`${user.saldo.toLocaleString()} 🌮`, width - 30, yPos + 40);
     });
 
-    // Footer com marca
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.font = '14px Arial';
     ctx.textAlign = 'center';
@@ -280,7 +262,6 @@ Responda em JSON com:
   }
 }
 
-// Singleton instance
 let groqImageService: GroqImageService | null = null;
 
 export function getGroqImageService(): GroqImageService {

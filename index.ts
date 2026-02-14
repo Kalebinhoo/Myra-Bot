@@ -3,11 +3,13 @@ import dotenv from "dotenv";
 import { MongoClient, type Db } from "mongodb";
 import { getSaldo, getSaldoMessage, addSaldo } from "./cogs/economia/saldo";
 import { executeAddPetisco } from "./cogs/economia/addpetisco";
+import { executeRank, handleRankNavigation } from "./cogs/economia/rank";
 import { executeShip } from "./cogs/diversão/ship";
 import { executeCoposSortidos, handleCopoChoice } from "./cogs/diversão/copossortidos";
 import { executePedraPapelTesoura, handlePedraPapelTesoura } from "./cogs/diversão/pppt";
 import { executeDaily, handleDailyButton } from "./cogs/economia/daily";
 import { handleGuildCreate, handleGuildDelete } from "./evento/logs-entrada";
+import { handleCommandLogs, handleCommandErrors } from "./evento/logs-comandos";
 import { executeInfo } from "./cogs/utilidades/info";
 import { executeAvatar } from "./cogs/utilidades/avatar";
 import { executeClear } from "./cogs/moderação/clear";
@@ -78,6 +80,9 @@ const commands = [
     .setName("daily")
     .setDescription("Colete seus petiscos diários!"),
   new SlashCommandBuilder()
+    .setName("rank")
+    .setDescription("Mostra o ranking dos usuários mais ricos em petiscos"),
+  new SlashCommandBuilder()
     .setName("info")
     .setDescription("Mostra informações sobre o bot!"),
   new SlashCommandBuilder()
@@ -98,6 +103,15 @@ const commands = [
         .setRequired(true)
         .setMinValue(1)
         .setMaxValue(100)
+    ),
+  new SlashCommandBuilder()
+    .setName("chat")
+    .setDescription("Converse com a IA do Myra Bot")
+    .addStringOption(option =>
+      option.setName('mensagem')
+        .setDescription('Sua mensagem para a IA')
+        .setRequired(true)
+        .setMaxLength(1000)
     ),
 ].map((command) => command.toJSON());
 
@@ -129,6 +143,8 @@ client.once(Events.ClientReady, async (readyClient) => {
 
 handleGuildCreate(client);
 handleGuildDelete(client);
+handleCommandLogs(client);
+handleCommandErrors(client);
 
 client.on(Events.GuildCreate, () => {
   updateBotStatus();
@@ -160,6 +176,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await handlePedraPapelTesoura(interaction);
       } else if (interaction.customId === 'daily_toggle_ping') {
         await handleDailyButton(interaction);
+      } else if (interaction.customId.startsWith('rank_')) {
+        await handleRankNavigation(interaction);
       }
     } catch (error) {
       console.error("Erro ao processar botão:", error);
@@ -194,6 +212,9 @@ async function handleCommand(interaction: ChatInputCommandInteraction) {
       break;
     case "daily":
       await executeDaily(interaction);
+      break;
+    case "rank":
+      await executeRank(interaction);
       break;
     case "info":
       await executeInfo(interaction);

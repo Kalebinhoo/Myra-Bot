@@ -11,6 +11,30 @@ export async function addSaldo(userId: string, amount: number): Promise<number> 
   return novoSaldo;
 }
 
+// Função para obter múltiplos saldos de uma vez (otimizada para rank)
+export async function getMultipleSaldos(userIds: string[]): Promise<Map<string, number>> {
+  const result = new Map<string, number>();
+  
+  for (const userId of userIds) {
+    result.set(userId, saldos.get(userId) ?? 100);
+  }
+  
+  return result;
+}
+
+// Função para obter todos os saldos não-padrão (para ranking)
+export async function getAllNonDefaultSaldos(): Promise<Map<string, number>> {
+  const result = new Map<string, number>();
+  
+  for (const [userId, saldo] of saldos.entries()) {
+    if (saldo > 100) { // Apenas usuários com saldo diferente do padrão
+      result.set(userId, saldo);
+    }
+  }
+  
+  return result;
+}
+
 export async function getSaldoMessage(userId: string, userMention: string): Promise<string> {
   const saldo = await getSaldo(userId);
 

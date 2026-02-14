@@ -1,15 +1,13 @@
 import { AuditLogEvent, Client, EmbedBuilder, Events, Guild, TextChannel } from "discord.js";
 
-const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID ?? "ID_DO_CANAL_QUE_VAI_RODAR_AS_ENTRADA";
-
 async function fetchLogChannel(client: Client): Promise<TextChannel | null> {
-	if (!LOG_CHANNEL_ID) {
+	if (!process.env.LOG_CHANNEL_ID) {
 		console.warn("LOG_CHANNEL_ID não configurado. Pulando logs de entrada/saída.");
 		return null;
 	}
 
 	try {
-		const channel = await client.channels.fetch(LOG_CHANNEL_ID);
+		const channel = await client.channels.fetch(process.env.LOG_CHANNEL_ID!);
 		return channel instanceof TextChannel ? channel : null;
 	} catch (error) {
 		console.error("Não foi possível acessar o canal de logs:", error);

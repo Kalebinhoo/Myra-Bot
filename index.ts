@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { MongoClient, type Db } from "mongodb";
 import { getSaldo, getSaldoMessage, addSaldo } from "./cogs/economia/saldo";
 import { executeAddPetisco } from "./cogs/economia/addpetisco";
+import { executeTrabalhar } from "./cogs/economia/trabalhar";
 import { executeRank, handleRankNavigation } from "./cogs/economia/rank";
 import { executeShip } from "./cogs/diversão/ship";
 import { executeCoposSortidos, handleCopoChoice } from "./cogs/diversão/copossortidos";
@@ -13,6 +14,16 @@ import { handleCommandLogs, handleCommandErrors } from "./evento/logs-comandos";
 import { executeInfo } from "./cogs/utilidades/info";
 import { executeAvatar } from "./cogs/utilidades/avatar";
 import { executeClear } from "./cogs/moderação/clear";
+import { executeCriarEmbed } from "./cogs/Administração/embed_criar";
+import { 
+  handleEmbedButton, 
+  handleEmbedModal, 
+  handleTemplateButton, 
+  handleTemplateSaveModal, 
+  handleTemplateLoadModal,
+  handleChannelSelect,
+  handleSpecificChannelSelect 
+} from "./cogs/Administração/embed_criar";
 
 console.log("Iniciando bot TypeScript...");
 
@@ -77,6 +88,9 @@ const commands = [
     .setName("ppt")
     .setDescription("Jogue pedra, papel ou tesoura contra o bot!"),
   new SlashCommandBuilder()
+    .setName("trabalho")
+    .setDescription("Escolha um trabalho para ganhar petiscos!"),
+  new SlashCommandBuilder()
     .setName("daily")
     .setDescription("Colete seus petiscos diários!"),
   new SlashCommandBuilder()
@@ -105,6 +119,10 @@ const commands = [
         .setMaxValue(100)
     ),
   new SlashCommandBuilder()
+    .setName("criar_embed")
+    .setDescription("[ADMIN] Cria um embed interativo personalizado")
+    .setDefaultMemberPermissions(0),
+  new SlashCommandBuilder()
     .setName("chat")
     .setDescription("Converse com a IA do Myra Bot")
     .addStringOption(option =>
@@ -119,21 +137,34 @@ const rest = new REST({ version: "10" }).setToken(token);
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
+
+const statuses = [
+  () => {
+    const guildCount = client.guilds.cache.size;
+    return `Myra está em ${guildCount} servidor${guildCount !== 1 ? 'es' : ''} 💚`;
+  },
+  () => 'Já coletou seus petisco com /daily?? 🌮'
+];
+let statusIndex = 0;
+
 function updateBotStatus() {
-  const guildCount = client.guilds.cache.size;
-  client.user?.setActivity(`Myra está em ${guildCount} servidor 💚${guildCount !== 1 ? 'es' : ''}`, {
+  const status = statuses[statusIndex % statuses.length];
+  client.user?.setActivity(typeof status === 'function' ? status() : status, {
     type: ActivityType.Custom
   });
+  statusIndex++;
 }
 
 async function registerCommands() {
   await rest.put(Routes.applicationCommands(clientId), { body: commands });
 }
 
+
 client.once(Events.ClientReady, async (readyClient) => {
   try {
     await registerCommands();
     updateBotStatus();
+    setInterval(updateBotStatus, 15000);
     console.log(`✨ Bot online como ${readyClient.user.tag}`);
     console.log(`📊 Conectado a ${readyClient.guilds.cache.size} servidor(es)`);
   } catch (error) {
@@ -178,6 +209,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await handleDailyButton(interaction);
       } else if (interaction.customId.startsWith('rank_')) {
         await handleRankNavigation(interaction);
+      } else if (interaction.customId.startsWith('embed_')) {
+        await handleEmbedButton(interaction);
+      } else if (interaction.customId.startsWith('embedgenerator_')) {
+        await handleEmbedButton(interaction);
+      } else if (interaction.customId.startsWith('template_')) {
+        await handleTemplateButton(interaction);
       }
     } catch (error) {
       console.error("Erro ao processar botão:", error);
@@ -185,6 +222,42 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await interaction.followUp({ content: "Ocorreu um erro ao processar sua escolha.", flags: [64] });
       } else {
         await interaction.reply({ content: "Ocorreu um erro ao processar sua escolha.", flags: [64] });
+      }
+    }
+  }
+
+  if (interaction.isModalSubmit()) {
+    try {
+      if (interaction.customId.startsWith('embed_modal_')) {
+        await handleEmbedModal(interaction);
+      } else if (interaction.customId.startsWith('template_save_modal_')) {
+        await handleTemplateSaveModal(interaction);
+      } else if (interaction.customId.startsWith('template_load_modal_')) {
+        await handleTemplateLoadModal(interaction);
+      }
+    } catch (error) {
+      console.error("Erro ao processar modal:", error);
+      if (interaction.deferred || interaction.replied) {
+        await interaction.followUp({ content: "Ocorreu um erro ao processar o modal.", flags: [64] });
+      } else {
+        await interaction.reply({ content: "Ocorreu um erro ao processar o modal.", flags: [64] });
+      }
+    }
+  }
+
+  if (interaction.isStringSelectMenu()) {
+    try {
+      if (interaction.customId.startsWith('embed_channel_select_')) {
+        await handleChannelSelect(interaction);
+      } else if (interaction.customId.startsWith('embed_specific_channel_')) {
+        await handleSpecificChannelSelect(interaction);
+      }
+    } catch (error) {
+      console.error("Erro ao processar select menu:", error);
+      if (interaction.deferred || interaction.replied) {
+        await interaction.followUp({ content: "Ocorreu um erro ao processar sua seleção.", flags: [64] });
+      } else {
+        await interaction.reply({ content: "Ocorreu um erro ao processar sua seleção.", flags: [64] });
       }
     }
   }
@@ -210,6 +283,9 @@ async function handleCommand(interaction: ChatInputCommandInteraction) {
     case "ppt":
       await executePedraPapelTesoura(interaction);
       break;
+    case "trabalho":
+      await executeTrabalhar(interaction);
+      break;
     case "daily":
       await executeDaily(interaction);
       break;
@@ -224,6 +300,9 @@ async function handleCommand(interaction: ChatInputCommandInteraction) {
       break;
     case "clear":
       await executeClear(interaction);
+      break;
+    case "criar_embed":
+      await executeCriarEmbed(interaction);
       break;
     default:
       await interaction.reply({ content: "Comando desconhecido.", flags: [64] });

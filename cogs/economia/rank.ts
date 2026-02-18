@@ -212,7 +212,7 @@ export async function executeRank(interaction: ChatInputCommandInteraction, page
         ctx.fillStyle = '#b3ff00';
         ctx.font = 'bold 28px Arial';
         ctx.textAlign = 'right';
-        ctx.fillText(`${user.balance.toLocaleString()} 🌮`, canvas.width - 40, y + 50);
+        ctx.fillText(`${user.balance.toLocaleString()} 🦴`, canvas.width - 40, y + 50);
       }
 
 

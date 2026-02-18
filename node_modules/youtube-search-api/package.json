@@ -1,0 +1,56 @@
+{
+  "name": "youtube-search-api",
+  "version": "2.0.1",
+  "description": "Node.js and TypeScript library to get YouTube search results with playlist by provided keywords, no Login or API key required!",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damonwonghv/youtube-search-api.git"
+  },
+  "keywords": [
+    "Youtube",
+    "search",
+    "api",
+    "youtube-search",
+    "youtube-api",
+    "youtube",
+    "api",
+    "play",
+    "youtube playlist",
+    "playlist",
+    "live",
+    "channel",
+    "typescript"
+  ],
+  "author": "thisisdamon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/damonwonghv/youtube-search-api/issues"
+  },
+  "homepage": "https://github.com/damonwonghv/youtube-search-api#readme",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "axios": "^1.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.10",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.12",
+    "ts-jest": "^29.1.2",
+    "nock": "^13.5.4"
+  }
+}

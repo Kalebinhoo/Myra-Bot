@@ -5,17 +5,42 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@discordjs/voice": "^0.19.0",
+    "@distube/ytdl-core": "^4.16.12",
+    "axios": "^1.13.5",
     "canvas": "^3.2.1",
+    "deezer-web-api": "^1.7.2",
     "discord.js": "^14.25.1",
-    "dotenv": "^17.2.4",
+    "dotenv": "^17.3.1",
     "groq-sdk": "^0.7.0",
     "mongodb": "^7.1.0",
-    "openai": "^6.21.0"
+    "openai": "^6.21.0",
+    "spotify-web-api-node": "^5.0.2",
+    "tidal-api-wrapper": "^1.7.1",
+    "youtube-search-api": "^2.0.1",
+    "yt-search": "^2.13.1",
+    "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
     "@types/node": "^25.2.3",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  }
+  },
+  "name": "myra-bot",
+  "version": "1.0.0",
+  "description": "Myra é um bot completo para Discord focado em **moderação, diversão, economia, automod, tickets e administração avançada**.  \r Projetado para oferecer controle total do servidor com estabilidade, organização e facilidade de uso.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kalebinhoo/Myra-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Kalebinhoo/Myra-Bot/issues"
+  },
+  "homepage": "https://github.com/Kalebinhoo/Myra-Bot#readme"
 }

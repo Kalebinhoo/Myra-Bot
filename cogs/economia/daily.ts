@@ -89,6 +89,7 @@ export async function executeDaily(interaction: ChatInputCommandInteraction) {
         .setColor(0x00FF00)
         .setTitle("⏰ Já coletou!")
         .setDescription(`Você já coletou seu daily hoje!\n\nPróximo daily em: <t:${Math.floor(nextClaim.getTime() / 1000)}:R>`)
+        .setThumbnail("https://media.tenor.com/bwPY1-0JJTUAAAAi/gift-gift-box.gif")
         .setTimestamp();
 
       return interaction.reply({ embeds: [embed], flags: [64] });
@@ -105,6 +106,7 @@ export async function executeDaily(interaction: ChatInputCommandInteraction) {
     .addFields(
       { name: "Saldo atual", value: `${newBalance.toLocaleString()} petiscos`, inline: true }
     )
+    .setThumbnail("https://media.tenor.com/bwPY1-0JJTUAAAAi/gift-gift-box.gif")
     .setTimestamp();
 
   await interaction.reply({ embeds: [embed] });

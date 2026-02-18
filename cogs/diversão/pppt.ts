@@ -71,7 +71,7 @@ export async function handlePedraPapelTesoura(interaction: any) {
   if (result === "win") {
     resultText = "Nunca imaginei que você seria bom nisso... Parabéns, você ganhou dessa vez! 🥳";
   } else if (result === "lose") {
-    resultText = "Hahaha, você perdeu, agora você tá me devendo um petisco! 🌮🤣";
+    resultText = "Hahaha, você perdeu, agora você tá me devendo um petisco! <:petisco:1472879242868953150>🤣";
   } else {
     resultText = "Nossa partida empatou... Tente novamente somente dando o comando \`/ppt\`";
   }

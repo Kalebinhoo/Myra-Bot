@@ -14,38 +14,7 @@ export async function executeAvatar(interaction: ChatInputCommandInteraction): P
     })
     .setTimestamp();
 
-  const row = {
-    type: 1,
-    components: [
-      {
-        type: 2,
-        style: 5,
-        label: "128px",
-        url: targetUser.displayAvatarURL({ size: 128, extension: 'png' })
-      },
-      {
-        type: 2,
-        style: 5,
-        label: "256px", 
-        url: targetUser.displayAvatarURL({ size: 256, extension: 'png' })
-      },
-      {
-        type: 2,
-        style: 5,
-        label: "512px",
-        url: targetUser.displayAvatarURL({ size: 512, extension: 'png' })
-      },
-      {
-        type: 2,
-        style: 5,
-        label: "1024px",
-        url: targetUser.displayAvatarURL({ size: 1024, extension: 'png' })
-      }
-    ]
-  };
-
   await interaction.reply({ 
-    embeds: [embed],
-    components: [row]
+    embeds: [embed]
   });
 }
